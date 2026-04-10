@@ -4,7 +4,7 @@
 - **Nombre:** Joshua David Quiroga  
 - **Curso:** #1  
 - **Materia:** Desarrollo de Software (DOSW)  
-- **Profesor:** Martin Cantor  
+- **Profesor:** Andres Martin Cantor  
 
 ---
 
