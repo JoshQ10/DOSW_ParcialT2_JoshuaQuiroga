@@ -1,7 +1,7 @@
 # Parcial Segundo Corte - DOSW
 
 ## Información del Estudiante
-- **Nombre:** Joshua David Quiroga  
+- **Nombre:** Joshua David Quiroga y Juan Carlos Bohorquez
 - **Curso:** #1  
 - **Materia:** Desarrollo de Software (DOSW)  
 - **Profesor:** Andres Martin Cantor  
