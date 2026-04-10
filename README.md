@@ -265,7 +265,6 @@ Son clases que contiene reglas complementando la logica de negocio, representado
 
 Punto 9
 
-https://lucid.app/lucidchart/80129cc3-e2c9-4f90-9a09-084a448140d9/edit?viewport_loc=6528%2C-784%2C3758%2C1630%2C0_0&invitationId=inv_b3e60ec2-05de-4bac-8a0d-b244518e43c3
 
 
 
