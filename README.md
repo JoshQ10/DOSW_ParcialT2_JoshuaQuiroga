@@ -209,25 +209,59 @@ entidad -> relacion
 # Punto 2
 
 ## Descripción
-_(Describe aquí el enunciado del punto 2)_
+
+Explique la diferencia entre Validaciones de input y Validaciones de
+negocio
+
 
 ## Análisis
-_(Explica tu razonamiento)_
+Son formas de verificacion divididas en FrontEnd (UI) y Backend, siendo estos implementaciones a partir de la inserccion o solicitudes tomandas desde el controlador y convertidas por los mappers, luego en el ambito de la logica de negocio comprobar que la solicitud es valida o exista, por ejemplo:
 
-## Implementación
-_(Incluye código o explicación)_
-
-## Pruebas
-_(Evidencia o validación)_
-
+cuando el usuario quiere registrarse con un correo con un correo institucional, se envia la solicitud (inserccion de datos) a partir de los DTOS, para que luego la logica del negocio del servicio verifique que tipo de solicitud es, y si es valida cumplienod con los caracteres especiales de la contraseña que use( verificacion en UI/input/DTO) al agregar los datos se verifica el correo que tenga "@", que la contraseña cumpla con ciertos caracteres tec.., luego de ello se verifica que los datos se cumplan segun su funcionalidad y proposito de la aplicacion atravez de los servicios (que sea un correo educativo) 
 ---
 
-#Punto 5
+
+
+#Punto 4
 
 ## Diagrama de componentes especifico
 <img width="1595" height="566" alt="image" src="https://github.com/user-attachments/assets/3b1788d4-9ed1-4980-be1e-3a901988125f" />
 
+---
 
+# Punto 5
+
+## Descripción
+
+¿Qué problemas pueden surgir si no se separan correctamente las capas dentro de un proyecto de software?
+
+## Análisis
+
+Pueden llegar a surgir multiples errores, desde codigo repetido (metodos, funcionalidad, responsabilidades), mal flujo de solicitudes, conversion de datos, problemas con los modelos, el flujo de os test tambien se podria ver afectado ya que al implementar un test digamos para un DTO, se debe haber un flujo con las clases de los mappers y al no tener una buena organizacion, el test se veria afectado
+
+---
+
+# Punto 7 
+
+## Descripción
+
+¿Cuáles son las diferencias entre un validador, una utilidad y un servicio?
+
+## Análisis
+
+### Validador
+
+Es una clase que verifica el proposito de la aplicacion (funcionalidad) y esos se ven representados a partir de (Request DTOs, entidades, etc.). En donde se implementan las anotaciones (@NotNull, @Email, @Size, etc.), se realiza a partir de la inserccion de datos, en donde se cumpla los inputs, con ciertos requerimientos com el correo, o la contraseña con ciertos caracteres
+
+### Utilidad 
+
+Son clases, adicionales que complementan las clases de modelo, siendo estas genericas pero utiles como una interfaz, No manejan persistencia, ni lógica de negocio compleja. implementadfas como delegacion de responsabilidad Son estáticas, no necesitan inyección de dependencias
+
+### Servicio
+
+Son clases que contiene reglas complementando la logica de negocio, representado con @service, ,maneja acceso a la base de datos
+
+---
 # Punto 11
 
 `A`
