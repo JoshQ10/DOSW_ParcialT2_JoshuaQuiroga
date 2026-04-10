@@ -63,3 +63,14 @@ _(Resultados o validación)_
 
 ---
 
+# Evidencias
+
+## Miro
+<img width="1860" height="917" alt="image" src="https://github.com/user-attachments/assets/6e4076ef-fe44-4d87-9b64-0cd54b84dec0" />
+
+## LucidChart
+<img width="1856" height="925" alt="image" src="https://github.com/user-attachments/assets/b35235a8-a71f-4bb5-814a-bfd41595c8f8" />
+
+## Figma
+<img width="1865" height="928" alt="image" src="https://github.com/user-attachments/assets/f06f4528-a90d-4a91-a3f1-ae02548f6cbb" />
+
