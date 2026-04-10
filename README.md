@@ -286,5 +286,7 @@ La informacion que deberia registrarse son datos de movimientos monetarios, cant
 b. ¿Qué NO debería registrarse (por seguridad)?
 Lo que no deberia ir son las credenciales e informacion especifica de clientes y de la señora del cafe
 ---
+FIGMA
+<img width="1374" height="742" alt="image" src="https://github.com/user-attachments/assets/1b8320d6-c7e3-4165-bb98-da210ba56692" />
 
 Juancarlos Bohorquez Monroy, tuve puntos extra en los laboratorio, de la semana 10 
