@@ -222,7 +222,7 @@ cuando el usuario quiere registrarse con un correo con un correo institucional, 
 
 
 
-#Punto 4
+# Punto 4
 
 ## Diagrama de componentes especifico
 <img width="1595" height="566" alt="image" src="https://github.com/user-attachments/assets/3b1788d4-9ed1-4980-be1e-3a901988125f" />
@@ -288,7 +288,24 @@ La informacion que deberia registrarse son datos de movimientos monetarios, cant
 b. ¿Qué NO debería registrarse (por seguridad)?
 Lo que no deberia ir son las credenciales e informacion especifica de clientes y de la señora del cafe
 ---
-FIGMA
-<img width="1374" height="742" alt="image" src="https://github.com/user-attachments/assets/1b8320d6-c7e3-4165-bb98-da210ba56692" />
+
+
+# Punto 16
+
+## Diagramas de pantalla
+
+1) Login
+<img width="1066" height="597" alt="image" src="https://github.com/user-attachments/assets/9af16b6c-a14d-4ab7-9682-6ef3ce652aaf" />
+
+2) Registro
+<img width="919" height="516" alt="image" src="https://github.com/user-attachments/assets/5b9a0f70-961a-413f-97d5-74e96bef0aa4" />
+
+3) Menu Home
+<img width="1062" height="596" alt="image" src="https://github.com/user-attachments/assets/4fa9c45e-948e-4fcb-b280-daf4e8113b8a" />
+
+4) Carrito de compra (Sin terminar)
+<img width="1064" height="590" alt="image" src="https://github.com/user-attachments/assets/b5cab38f-2230-46b3-be12-d93b57862d24" />
+
+
 
 Juancarlos Bohorquez Monroy, tuve puntos extra en los laboratorio, de la semana 10 
