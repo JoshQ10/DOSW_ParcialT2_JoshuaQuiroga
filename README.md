@@ -270,13 +270,209 @@ Son clases que contiene reglas complementando la logica de negocio, representado
 # Punto 9
 
 ---
+
+# Punto 10
+
+## Descripcion
+
+Proponga 2 índices que mejoren el rendimiento de las consultas de ECIXPRESS y establezca con un criterio técnico el porque dan valor a la solución.
+
+## Analisis
+
+Índice sobre email en la tabla users "CREATE INDEX idx_users_email ON users(email);"
+
+Este índice tiene valor técnico directo en dos funcionalidades críticas del sistema. En F-01 (registro), el sistema debe verificar que el correo institucional no exista antes de crear el usuario, lo que implica un SELECT por email. En F-02 (login), Spring Security carga el usuario por su email para autenticarlo. Sin el índice, ambas operaciones hacen un full table scan, es decir, recorren toda la tabla fila por fila.
+
+Índice compuesto sobre user_id y status en la tabla orders "CREATE INDEX idx_orders_user_status ON orders(user_id, status);"
+
+Este índice responde directamente a una regla de negocio definida en el caso de estudio: un usuario solo puede tener un pedido activo a la vez. Para validar esa regla, el OrderRepository ejecuta un findByUserAndStatus cada vez que un cliente intenta crear un nuevo pedido, buscando si ya existe una orden en estado CREADO o EN_PREPARACION para ese usuario. 
+
+---
 # Punto 11
 
-`A`
+## Descripcion
+
+Como parte de la solución, es fundamental definir un conjunto robusto de
+pruebas que garantice la calidad y correcto funcionamiento de las
+funcionalidades expuestas en el sistema. Dado el enfoque de
+transparencia con el cliente, se requiere evidenciar cómo se desarrollaría
+la funcionalidad de “Solicitar pedido” siguiendo el enfoque de TDD (Test
+Driven Development). En este contexto, se espera que usted:
+
+● Describa cómo se aplican las fases de TDD (Red, Green,
+Refactor) en la implementación de esta funcionalidad.
+
+● Defina los casos de prueba iniciales antes de la implementación,
+contemplando tanto escenarios exitosos como de error.
+
+● Identifique las validaciones clave que deben ser cubiertas por las
+pruebas.
+
+## Analisis
+
+**Fase Green — escribir el mínimo código para que la prueba pase**
+
 Las fases de TDD se aplican de manera en la que primeramente se aplica una prueba Red la cual es una prueba que esta destinada a fallar, luego tenemos la prueba Green la cual es una prueba minima del codigo funcional. Por ultimo se implementa el Refactor de ser
 necesario en caso de que se necesite añadir codigo sin que la prueba falle por las modificaciones.
 
-`B`
+
+Esta prueba falla porque orderService.crearPedido() no existe todavía. Ese error en rojo es la señal de que se puede empezar a implementar.
+
+Se implementa crearPedido() con el código más simple posible que haga pasar la prueba, sin preocuparse aún por elegancia ni casos borde. El objetivo es únicamente ver la prueba en verde.
+
+```java
+public OrderResponse crearPedido(CreateOrderRequest request) {
+    Order order = new Order();
+    order.setUser(request.getUser());
+    order.setItems(request.getItems());
+    order.setStatus(OrderStatus.CREADO);
+    order.setTotal(calcularTotal(request.getItems()));
+    order.setCreatedAt(LocalDateTime.now());
+    orderRepository.save(order);
+    return orderDtoMapper.toResponse(order);
+}
+```
+**Fase Refactor — mejorar el código sin romper las pruebas**
+
+Con la prueba en verde, se mejora la implementación: se extraen métodos, se aplican validaciones, se mejora la legibilidad. Después de cada cambio se corre la prueba para confirmar que sigue en verde. Aquí es donde entran los validators, el manejo de stock y la verificación de pedido activo.
+
+*Validaciones de negocio* — estas las cubre `OrderService` y son las más críticas para el dominio:
+
+- El usuario no debe tener ningún pedido en estado `CREADO` o `EN_PREPARACION` antes de crear uno nuevo
+- Cada producto de la lista debe tener `status = DISPONIBLE`
+- El stock de cada producto debe ser mayor o igual a la cantidad solicitada
+- El total del pedido debe calcularse como la sumatoria de `precio × cantidad` para cada item
+- El stock de cada producto debe reducirse correctamente al momento de persistir el pedido
+- El pedido debe iniciarse siempre en estado `CREADO`, nunca en otro estado
+
+---
+# Punto 12
+
+**Fase Green — escribir el mínimo código para que la prueba pase**
+
+
+```java
+@Test
+void deberiaCrearPedidoExitosamente() {
+    // Arrange
+    CreateOrderRequest request = new CreateOrderRequest(usuario, List.of(item));
+
+    // Act
+    OrderResponse response = orderService.crearPedido(request);
+
+    // Assert
+    assertNotNull(response);
+    assertEquals(OrderStatus.CREADO, response.getStatus());
+}
+```
+Esta prueba falla porque orderService.crearPedido() no existe todavía. Ese error en rojo es la señal de que se puede empezar a implementar.
+
+Se implementa crearPedido() con el código más simple posible que haga pasar la prueba, sin preocuparse aún por elegancia ni casos borde. El objetivo es únicamente ver la prueba en verde.
+
+**Fase Refactor — mejorar el código sin romper las pruebas**
+
+```java
+public OrderResponse crearPedido(CreateOrderRequest request) {
+    Order order = new Order();
+    order.setUser(request.getUser());
+    order.setItems(request.getItems());
+    order.setStatus(OrderStatus.CREADO);
+    order.setTotal(calcularTotal(request.getItems()));
+    order.setCreatedAt(LocalDateTime.now());
+    orderRepository.save(order);
+    return orderDtoMapper.toResponse(order);
+}
+```
+**Casos de prueba iniciales**
+
+```java
+// 
+@Test
+void deberiaCrearPedidoExitosamente() {
+    // usuario sin pedido activo, productos con stock disponible
+    // esperado: OrderResponse con status CREADO y total calculado
+}
+
+// MAL: usuario ya tiene un pedido activo
+@Test
+void deberiaLanzarExcepcionSiUsuarioTienePedidoActivo() {
+    // usuario con pedido en estado CREADO
+    // esperado: BusinessException "El usuario ya tiene un pedido activo"
+}
+
+// MAL: producto sin stock
+@Test
+void deberiaLanzarExcepcionSiProductoSinStock() {
+    // producto con stock = 0
+    // esperado: BusinessException "Producto sin stock disponible"
+}
+
+// MAL: producto no disponible
+@Test
+void deberiaLanzarExcepcionSiProductoNoDisponible() {
+    // producto con status NO_DISPONIBLE
+    // esperado: BusinessException "Producto no disponible"
+}
+
+// MAL: lista de productos vacía
+@Test
+void deberiaLanzarExcepcionSiListaProductosEsVacia() {
+    // request con lista de items vacía
+    // esperado: BusinessException "El pedido debe tener al menos un producto"
+}
+
+// MAL: cantidad de producto es cero o negativa
+@Test
+void deberiaLanzarExcepcionSiCantidadEsInvalida() {
+    // item con quantity = 0 o quantity = -1
+    // esperado: BusinessException "La cantidad debe ser mayor a cero"
+}
+
+// MAL: stock insuficiente para la cantidad solicitada
+@Test
+void deberiaLanzarExcepcionSiStockInsuficiente() {
+    // producto con stock = 2, cantidad solicitada = 5
+    // esperado: BusinessException "Stock insuficiente para el producto"
+}
+
+//verificar que el total se calcula correctamente
+@Test
+void deberiaCalcularTotalCorrectamente() {
+    // producto A precio 5000 cantidad 2, producto B precio 3000 cantidad 1
+    // esperado: total = 13000
+}
+
+//verificar que el stock se descuenta al confirmar
+@Test
+void deberiaDescontarStockAlCrearPedido() {
+    // producto con stock = 10, cantidad solicitada = 3
+    // esperado: stock del producto = 7 después de crear el pedido
+}
+```
+## Punto 13
+
+Un pipeline es un proceso automatizado que toma tu código desde que lo subes al repositorio hasta que queda desplegado y funcionando en producción, sin que tengas que hacer nada manual.
+Las etapas principales son:
+
+1. Source (Fuente)
+Es el punto de partida. El pipeline se activa automáticamente cuando alguien sube código o hace una mezcla de ramas, por ejemplo cuando se mezcla una rama feature sobre develop. Desde ese momento el pipeline toma el control.
+
+2. Build (Construcción)
+El pipeline toma el código fuente y lo compila. En el caso de ECIXPRESS con Spring Boot, esto significa que Maven descarga las dependencias del pom.xml y genera el archivo .jar ejecutable. Si el código tiene errores de compilación, el pipeline se detiene aquí y notifica al equipo.
+
+3. Test (Pruebas)
+Se ejecutan todas las pruebas unitarias y de integración que el equipo escribió. En ECIXPRESS esto incluiría los tests de OrderServiceTest, UserControllerTest, entre otros. Si alguna prueba falla, el pipeline se detiene y no permite continuar. Esta etapa es la que garantiza que el código que va a producción funciona correctamente.
+
+4. Code Analysis (Análisis estático)
+Herramientas como SonarQube o Jacoco revisan el código en busca de problemas de calidad: cobertura de pruebas insuficiente, código duplicado, malas prácticas o vulnerabilidades de seguridad. Es como una revisión automática de código.
+
+5. Package (Empaquetado)
+Una vez que el código pasó las pruebas y el análisis, se empaqueta la aplicación en un artefacto listo para desplegar, en el caso de Spring Boot ese artefacto es el .jar, o también puede construirse una imagen de Docker.
+
+6. Deploy (Despliegue)
+El artefacto empaquetado se sube al servidor o plataforma cloud donde va a correr la aplicación. En el caso del bono de ECIXPRESS esto sería Azure. Esta etapa puede tener varios ambientes en orden: primero se despliega en un ambiente de desarrollo, luego en uno de pruebas y finalmente en producción.
+
+---
 
 # Punto 15
 
