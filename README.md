@@ -222,7 +222,7 @@ cuando el usuario quiere registrarse con un correo con un correo institucional, 
 
 
 
-#Punto 4
+# Punto 4
 
 ## Diagrama de componentes especifico
 <img width="1595" height="566" alt="image" src="https://github.com/user-attachments/assets/3b1788d4-9ed1-4980-be1e-3a901988125f" />
