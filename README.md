@@ -265,8 +265,11 @@ Son clases que contiene reglas complementando la logica de negocio, representado
 
 Punto 9
 
+![Uploading Diagrama_de_Componentes_Especificos.png…]()
 
 
+
+[Diagrama de Componentes Especifico](https://lucid.app/lucidchart/80129cc3-e2c9-4f90-9a09-084a448140d9/edit?viewport_loc=-2438%2C-3000%2C6282%2C2470%2C0_0&invitationId=inv_b3e60ec2-05de-4bac-8a0d-b244518e43c3)
 
 ---
 # Punto 11
